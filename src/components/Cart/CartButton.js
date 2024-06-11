@@ -7,7 +7,7 @@ const CartButton = (props) => {
 
   const dispatch = useDispatch();
   const handleShowCart = () => {
-    dispatch(cartAction.showCart);
+    dispatch(cartAction.showCart());
   };
   return (
     <button onClick={handleShowCart} className={classes.button}>
