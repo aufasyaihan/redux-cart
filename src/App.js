@@ -5,7 +5,7 @@ import Products from "./components/Shop/Products";
 import { Fragment, useEffect } from "react";
 import { uiActions } from "./store/uiSlice";
 import Notification from "./components/UI/Notification";
-import { sendCartData } from "./store/cartSlice";
+import { fetchCartData, sendCartData } from "./store/cartAction";
 
 let isInitial = true;
 
@@ -14,6 +14,10 @@ function App() {
   const isVisible = useSelector((state) => state.ui.isVisible);
   const cart = useSelector((state) => state.cart);
   const notification = useSelector((state) => state.ui.notification);
+
+  useEffect(() => {
+    dispatch(fetchCartData());
+  }, [dispatch]);
 
   useEffect(() => {
     if (isInitial) {
