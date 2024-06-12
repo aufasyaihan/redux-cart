@@ -1,9 +1,9 @@
 import { configureStore, createSlice } from "@reduxjs/toolkit";
+import uiSlice from "./uiSlice";
 
 const cartState = {
   showCart: false,
-  addToCart: false,
-  item: { title: "Test Item", quantity: 0, total: 18, price: 6 },
+  item: [],
 };
 
 const cartSlice = createSlice({
@@ -13,21 +13,25 @@ const cartSlice = createSlice({
     showCart(state) {
       state.showCart = !state.showCart;
     },
-    addToCart(state) {
-      state.addToCart = !state.addToCart;
-      state.item.quantity++
+    addToCart(state, action) {
+      state.showCart = !state.showCart;
+      state.item.push = action.payload;
     },
     addQuantity(state) {
-      state.item.quantity++
+      if (state.item.length > 0) {
+        state.item[0].quantity++;
+      }
     },
     decreaseQuantity(state) {
-      state.quantity--;
+      if (state.item.length > 0 && state.item[0].quantity > 0) {
+        state.item[0].quantity--;
+      }
     },
   },
 });
 
 const store = configureStore({
-  reducer: cartSlice.reducer,
+  reducer: { ui: uiSlice.reducer },
 });
 
 export const cartAction = cartSlice.actions;
