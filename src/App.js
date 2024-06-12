@@ -1,24 +1,85 @@
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import Cart from "./components/Cart/Cart";
 import Layout from "./components/Layout/Layout";
 import Products from "./components/Shop/Products";
-import { useEffect } from "react";
+import { Fragment, useEffect } from "react";
+import { uiActions } from "./store/uiSlice";
+import Notification from "./components/UI/Notification";
+
+let isInitial = true;
 
 function App() {
+  const dispatch = useDispatch();
   const isVisible = useSelector((state) => state.ui.isVisible);
   const cart = useSelector((state) => state.cart);
+  const notification = useSelector((state) => state.ui.notification);
 
   useEffect(() => {
-    fetch("https://react-2d778-default-rtdb.firebaseio.com/cart.json", {
-      method: "PUT",
-      body: JSON.stringify(cart),
+    const sendCartData = async () => {
+      if (isInitial) {
+        isInitial = false;
+        return;
+      }
+
+      dispatch(
+        uiActions.showNotification({
+          status: "pending",
+          title: "Sending...",
+          message: "Sending cart data",
+        })
+      );
+
+      const response = await fetch(
+        "https://react-2d778-default-rtdb.firebaseio.com/cart.json",
+        {
+          method: "PUT",
+          body: JSON.stringify(cart),
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Sending cart data failed.");
+      }
+
+      dispatch(
+        uiActions.showNotification({
+          status: "success",
+          title: "Success!",
+          message: "Sent cart data successfully",
+        })
+      );
+    };
+
+    sendCartData().catch((error) => {
+      dispatch(
+        uiActions.showNotification({
+          status: "error",
+          title: "An Error Occured!",
+          message: "Sending cart data failed",
+        })
+      );
     });
-  }, [cart]);
+
+    const hideNotification = setTimeout(() => {
+      dispatch(uiActions.hideNotification());
+    }, 3000);
+
+    return () => clearTimeout(hideNotification);
+  }, [cart, dispatch]);
   return (
-    <Layout>
-      {isVisible && <Cart />}
-      <Products />
-    </Layout>
+    <Fragment>
+      {notification && (
+        <Notification
+          title={notification.title}
+          message={notification.message}
+          status={notification.status}
+        />
+      )}
+      <Layout>
+        {isVisible && <Cart />}
+        <Products />
+      </Layout>
+    </Fragment>
   );
 }
 
