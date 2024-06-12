@@ -15,6 +15,17 @@ const cartSlice = createSlice({
         existingItem.quantity++;
       }
     },
+    decreaseQuantity(state, action) {
+      const existingItem = state.items.find(
+        (item) => item.title === action.payload
+      );
+      if (existingItem) {
+        existingItem.quantity--;
+      }
+      if (existingItem.quantity < 1) {
+        state.items.pop(existingItem);
+      }
+    },
   },
 });
 
