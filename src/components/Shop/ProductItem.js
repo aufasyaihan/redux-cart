@@ -2,26 +2,16 @@ import { useDispatch, useSelector } from "react-redux";
 import Card from "../UI/Card";
 import classes from "./ProductItem.module.css";
 import { cartAction } from "../../store/cartSlice";
-import { useCallback } from "react";
 
 const ProductItem = (props) => {
   const dispatch = useDispatch();
   const items = useSelector((state) => state.cart.items);
-  const { title, price, description } = props;
+  const { id, title, price, description } = props;
 
-  const addToCartHandler = useCallback(
-    (title, price) => {
-      const existingItem = items.find((item) => item.title === title);
-
-      if (existingItem) {
-        dispatch(cartAction.addQuantity(title));
-      } else {
-        dispatch(cartAction.addToCart({ title, quantity: 1, price }));
-      }
-      console.log(items);
-    },
-    [dispatch, items]
-  );
+  const addToCartHandler = () => {
+    dispatch(cartAction.addItemToCart({ id, title, price }));
+    console.log(items);
+  };
 
   return (
     <li className={classes.item}>

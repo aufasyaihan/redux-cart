@@ -4,14 +4,14 @@ import { cartAction } from "../../store/cartSlice";
 
 const CartItem = (props) => {
   const dispatch = useDispatch();
-  const { title, quantity, price } = props.item[0];
+  const { title, quantity, price, id } = props.item;
   const total = price * quantity;
 
-  const decreaseHandler = (title) => {
-    dispatch(cartAction.decreaseQuantity(title));
+  const decreaseHandler = () => {
+    dispatch(cartAction.removeItemFromCart(id));
   };
-  const addQuantity = (title) => {
-    dispatch(cartAction.addQuantity(title));
+  const addQuantity = () => {
+    dispatch(cartAction.addItemToCart({ id, title, price }));
   };
   return (
     <li className={classes.item}>

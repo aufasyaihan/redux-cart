@@ -8,7 +8,9 @@ const Cart = (props) => {
   return (
     <Card className={classes.cart}>
       <h2>Your Shopping Cart</h2>
-      <ul>{items.length > 0 && <CartItem item={items} />}</ul>
+      <ul>
+        {items.map((item) => <CartItem key={item.id} item={item} />)}
+      </ul>
     </Card>
   );
 };
