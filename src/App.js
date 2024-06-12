@@ -4,12 +4,12 @@ import Layout from "./components/Layout/Layout";
 import Products from "./components/Shop/Products";
 
 function App() {
-  const isShow = useSelector((state) => state.ui.isVisible);
+  const isVisible = useSelector((state) => state.ui.isVisible);
   return (
-      <Layout>
-        {isShow && <Cart />}
-        <Products />
-      </Layout>
+    <Layout>
+      {isVisible && <Cart />}
+      <Products />
+    </Layout>
   );
 }
 
